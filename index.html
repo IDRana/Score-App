@@ -225,6 +225,8 @@
         }
 
         function addRuns(runs) {
+            if (wickets >= 10) return;
+            
             score += runs;
             balls++;
             currentOver.push(runs);
@@ -251,6 +253,8 @@
         }
 
         function addWide() {
+            if (wickets >= 10) return;
+            
             score += 1;
             extrasCount += 1;
             currentOver.push('Wd');
@@ -258,6 +262,8 @@
         }
 
         function addNoBall() {
+            if (wickets >= 10) return;
+            
             score += 1;
             extrasCount += 1;
             currentOver.push('Nb');
