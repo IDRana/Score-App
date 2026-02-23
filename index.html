@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Scoring App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏏 Cricket Scoring App</h1>
+        </header>
+
+        <div class="match-setup" id="matchSetup">
+            <h2>Match Setup</h2>
+            <div class="team-inputs">
+                <div class="input-group">
+                    <label for="team1Name">Team 1 Name:</label>
+                    <input type="text" id="team1Name" placeholder="Enter team 1 name" value="Team A">
+                </div>
+                <div class="input-group">
+                    <label for="team2Name">Team 2 Name:</label>
+                    <input type="text" id="team2Name" placeholder="Enter team 2 name" value="Team B">
+                </div>
+                <div class="input-group">
+                    <label for="totalOvers">Total Overs:</label>
+                    <input type="number" id="totalOvers" min="1" max="50" value="20">
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="startMatch()">Start Match</button>
+        </div>
+
+        <div class="scoring-area" id="scoringArea" style="display: none;">
+            <div class="scoreboard">
+                <div class="team-score">
+                    <h2 id="battingTeamName">Team A</h2>
+                    <div class="score-display">
+                        <div class="runs">
+                            <span class="score-value" id="runs">0</span>
+                            <span class="score-label">Runs</span>
+                        </div>
+                        <div class="wickets">
+                            <span class="score-value" id="wickets">0</span>
+                            <span class="score-label">Wickets</span>
+                        </div>
+                        <div class="overs">
+                            <span class="score-value" id="overs">0.0</span>
+                            <span class="score-label">Overs</span>
+                        </div>
+                    </div>
+                    <div class="run-rate">
+                        <span>Run Rate: <strong id="runRate">0.00</strong></span>
+                    </div>
+                </div>
+
+                <div class="innings-info">
+                    <p id="inningsInfo">1st Innings</p>
+                </div>
+
+                <div class="target-display" id="targetDisplay" style="display: none;">
+                    <p>Target: <strong id="targetScore">0</strong></p>
+                    <p>Required Run Rate: <strong id="requiredRunRate">0.00</strong></p>
+                </div>
+            </div>
+
+            <div class="controls">
+                <h3>Score Runs</h3>
+                <div class="run-buttons">
+                    <button class="btn btn-run" onclick="addRuns(0)">0</button>
+                    <button class="btn btn-run" onclick="addRuns(1)">1</button>
+                    <button class="btn btn-run" onclick="addRuns(2)">2</button>
+                    <button class="btn btn-run" onclick="addRuns(3)">3</button>
+                    <button class="btn btn-run btn-boundary" onclick="addRuns(4)">4</button>
+                    <button class="btn btn-run btn-boundary" onclick="addRuns(6)">6</button>
+                </div>
+
+                <h3>Extras</h3>
+                <div class="extra-buttons">
+                    <button class="btn btn-extra" onclick="addExtra('wide')">Wide</button>
+                    <button class="btn btn-extra" onclick="addExtra('noBall')">No Ball</button>
+                    <button class="btn btn-extra" onclick="addExtra('bye')">Bye</button>
+                    <button class="btn btn-extra" onclick="addExtra('legBye')">Leg Bye</button>
+                </div>
+
+                <h3>Wicket</h3>
+                <div class="wicket-buttons">
+                    <button class="btn btn-wicket" onclick="addWicket()">Wicket</button>
+                </div>
+
+                <div class="match-controls">
+                    <button class="btn btn-undo" onclick="undoLast()" id="undoBtn">Undo Last</button>
+                    <button class="btn btn-secondary" onclick="endInnings()" id="endInningsBtn">End Innings</button>
+                    <button class="btn btn-danger" onclick="resetMatch()">New Match</button>
+                </div>
+            </div>
+
+            <div class="ball-history">
+                <h3>This Over</h3>
+                <div id="currentOver" class="over-display"></div>
+            </div>
+
+            <div class="match-summary" id="matchSummary" style="display: none;">
+                <h2>Match Summary</h2>
+                <div id="summaryContent"></div>
+                <button class="btn btn-primary" onclick="resetMatch()">Start New Match</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
