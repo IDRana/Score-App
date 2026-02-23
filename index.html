@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Scoring App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .scoreboard {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .score-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .main-score {
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .wickets {
+            font-size: 32px;
+            color: #ff6b6b;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            opacity: 0.8;
+            font-size: 12px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 3px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .run-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+
+        .wicket-btn {
+            background: linear-gradient(135deg, #f44336, #da190b);
+            grid-column: span 2;
+        }
+
+        .extra-btn {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #9e9e9e, #757575);
+            grid-column: span 4;
+            margin-top: 10px;
+        }
+
+        .extras-section {
+            margin-bottom: 20px;
+        }
+
+        .extras-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .extras-controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏏 Cricket Scoring App</h1>
+        
+        <div class="scoreboard">
+            <div class="score-display">
+                <div class="main-score" id="score">0</div>
+                <div class="wickets">/ <span id="wickets">0</span></div>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-label">Overs</div>
+                    <div class="stat-value" id="overs">0.0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Run Rate</div>
+                    <div class="stat-value" id="runRate">0.00</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Extras</div>
+                    <div class="stat-value" id="extras">0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">This Over</div>
+                    <div class="stat-value" id="thisOver">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="run-btn" onclick="addRuns(0)">0</button>
+            <button class="run-btn" onclick="addRuns(1)">1</button>
+            <button class="run-btn" onclick="addRuns(2)">2</button>
+            <button class="run-btn" onclick="addRuns(3)">3</button>
+            <button class="run-btn" onclick="addRuns(4)">4</button>
+            <button class="run-btn" onclick="addRuns(6)">6</button>
+            <button class="wicket-btn" onclick="addWicket()">WICKET</button>
+        </div>
+
+        <div class="extras-section">
+            <div class="extras-title">Extras</div>
+            <div class="extras-controls">
+                <button class="extra-btn" onclick="addWide()">Wide</button>
+                <button class="extra-btn" onclick="addNoBall()">No Ball</button>
+            </div>
+        </div>
+
+        <button class="reset-btn" onclick="resetScore()">New Match</button>
+    </div>
+
+    <script>
+        let score = 0;
+        let wickets = 0;
+        let balls = 0;
+        let extrasCount = 0;
+        let currentOver = [];
+
+        function updateDisplay() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('wickets').textContent = wickets;
+            
+            const overs = Math.floor(balls / 6);
+            const ballsInOver = balls % 6;
+            document.getElementById('overs').textContent = `${overs}.${ballsInOver}`;
+            
+            const runRate = balls > 0 ? (score / (balls / 6)).toFixed(2) : '0.00';
+            document.getElementById('runRate').textContent = runRate;
+            
+            document.getElementById('extras').textContent = extrasCount;
+            
+            const overDisplay = currentOver.length > 0 ? currentOver.join(' ') : '-';
+            document.getElementById('thisOver').textContent = overDisplay;
+        }
+
+        function addRuns(runs) {
+            score += runs;
+            balls++;
+            currentOver.push(runs);
+            
+            if (balls % 6 === 0) {
+                currentOver = [];
+            }
+            
+            updateDisplay();
+        }
+
+        function addWicket() {
+            if (wickets < 10) {
+                wickets++;
+                balls++;
+                currentOver.push('W');
+                
+                if (balls % 6 === 0) {
+                    currentOver = [];
+                }
+                
+                updateDisplay();
+            }
+        }
+
+        function addWide() {
+            score += 1;
+            extrasCount += 1;
+            currentOver.push('Wd');
+            updateDisplay();
+        }
+
+        function addNoBall() {
+            score += 1;
+            extrasCount += 1;
+            currentOver.push('Nb');
+            updateDisplay();
+        }
+
+        function resetScore() {
+            if (confirm('Are you sure you want to start a new match?')) {
+                score = 0;
+                wickets = 0;
+                balls = 0;
+                extrasCount = 0;
+                currentOver = [];
+                updateDisplay();
+            }
+        }
+
+        // Initialize display
+        updateDisplay();
+    </script>
+</body>
+</html>
